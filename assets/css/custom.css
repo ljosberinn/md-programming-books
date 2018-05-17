@@ -1,0 +1,115 @@
+i.material-icons {
+  vertical-align: middle;
+}
+
+nav {
+  box-shadow: 5px 5px 5px 5px #000;
+}
+
+.collection {
+  border: none;
+}
+
+.collapsible-header,
+.collection.with-header .collection-header,
+.collection .collection-item {
+  background-color: transparent;
+}
+
+.collapsible-header {
+  position: relative;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background-color: #2e2837;
+  color: #00ff9c;
+}
+
+.secondary {
+  color: #dedede !important;
+}
+
+.row .col.offset-s2 {
+  margin-left: 16.66667% !important;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+.material-icons {
+  text-rendering: optimizeLegibility;
+  -webkit-font-feature-settings: 'liga';
+  -moz-font-feature-settings: 'liga';
+  font-feature-settings: 'liga';
+}
+
+nav ul li:hover,
+nav ul li.active {
+  background-color: #383145;
+}
+
+p {
+  line-height: 2rem;
+}
+
+.button-collapse {
+  color: #26a69a;
+}
+
+@media only screen and (max-width: 992px) {
+  .parallax-container .section {
+    position: absolute;
+    top: 40%;
+  }
+
+  #index-banner .section {
+    top: 10%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  #index-banner .section {
+    top: 0;
+  }
+}
+
+.icon-block {
+  padding: 0 15px;
+}
+
+.icon-block .material-icons {
+  font-size: inherit;
+}
+
+footer.page-footer {
+  margin: 0;
+  padding-top: 0;
+}
+
+.success {
+  background-color: #00897b;
+}
+
+.error {
+  background-color: #ff8a80;
+}
+
+main {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+main > .container,
+main > .container > .section {
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1;
+}
+
+[type='checkbox'].no-label + label {
+  padding-left: 10px;
+}

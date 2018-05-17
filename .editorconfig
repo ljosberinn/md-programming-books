@@ -1,0 +1,93 @@
+{
+  "editor.cursorStyle": "line",
+  "editor.cursorWidth": 5,
+  "editor.cursorBlinking": "smooth",
+  "editor.fontFamily": "Fira Code",
+  "editor.tabCompletion": true,
+  "editor.wordWrap": "on",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 17,
+  "editor.lineHeight": 27,
+  "editor.tabSize": 2,
+  "editor.letterSpacing": 0.5,
+  "editor.wordSeparators": "`~!@#%^&*()-=+[{]}\\|;:'\",.<>/?",
+  "editor.fontWeight": "400",
+  "editor.renderWhitespace": "all",
+  "editor.formatOnSave": true,
+  "editor.suggestFontSize": 16,
+  "editor.suggestLineHeight": 28,
+  "editor.quickSuggestionsDelay": 0,
+  "editor.formatOnPaste": true,
+  // terminal
+  "terminal.integrated.fontSize": 15,
+  "terminal.integrated.lineHeight": 1.5,
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.cursorStyle": "line",
+  // window
+  "window.zoomLevel": -1.5,
+  // explorer
+  "explorer.decorations.badges": false,
+  // prettier
+  "prettier.eslintIntegration": true,
+  "prettier.tabWidth": 2,
+  "prettier.proseWrap": "always",
+  "prettier.printWidth": 200,
+  "prettier.singleQuote": true,
+  "prettier.stylelintIntegration": true,
+  "stylelint.enable": true,
+  // sync
+  "sync.gist": "5830caef5951e804b8088dc6901a5b6c",
+  "sync.lastUpload": "2018-05-07T13:53:10.467Z",
+  "sync.autoDownload": false,
+  "sync.autoUpload": false,
+  "sync.lastDownload": "",
+  "sync.forceDownload": false,
+  "sync.host": "",
+  "sync.pathPrefix": "",
+  "sync.quietSync": false,
+  "sync.askGistName": false,
+  "sync.removeExtensions": true,
+  "sync.syncExtensions": true,
+  // workbench
+  "workbench.colorTheme": "One Dark Vivid",
+  "workbench.startupEditor": "none",
+  "workbench.statusBar.feedback.visible": false,
+  "workbench.iconTheme": "seti",
+  "workbench.colorCustomizations": {
+    "editor.selectionBackground": "#97bfb4",
+    "editor.selectionHighlightBackground": "#135564",
+    "editorIndentGuide.activeBackground": "#ff0000"
+  },
+  // files
+  "files.trimTrailingWhitespace": true,
+  // php formatter
+  "phpformatter.composer": true,
+  // php
+  "php.suggest.basic": false,
+  // git
+  "git.enableSmartCommit": true,
+  // live
+  "liveServer.settings.donotVerifyTags": true,
+  // disable regular javascript formatter to be overwritten by Prettier
+  "javascript.format.enable": false,
+  // custom php docblockeri information
+  "php-docblocker.author": {
+    "name": "Gerrit Alex",
+    "email": "admin@gerritalex.de"
+  },
+  // exclude certain folders for search
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    // Hide everything in /public, except "index.php"
+    "**/public/[abcdefghjklmnopqrstuvwxyz]*": true,
+    "**/public/i[abcdefghijklmopqrstuvwxyz]*": true,
+    // Hide everything in /vendor, except "laravel" folder.
+    "**/vendor/[abcdefghijkmnopqrstuvwxyz]*": true,
+    "**/vendor/l[bcdefghijklmnopqrstuvwxyz]*": true,
+    "storage/framework/views": true
+  },
+  "editor.renderIndentGuides": false,
+  // minify on save
+  "es6-css-minify.minifyOnSave": "exists"
+}
