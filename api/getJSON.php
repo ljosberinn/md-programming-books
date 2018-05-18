@@ -5,6 +5,7 @@ require 'functions.php';
 
 setGeneralHeaders();
 header('Content-type: application/json');
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 
 $conn = new mysqli($host, $user, $pw, $db);
 $conn->set_charset('utf8');

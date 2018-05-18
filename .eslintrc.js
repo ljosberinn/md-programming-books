@@ -18,6 +18,7 @@ module.exports = {
     'no-unused-vars': 'warn',
     'constructor-super': 'warn',
     'valid-typeof': 'warn',
+    'linebreak-style': 0,
   },
   globals: {},
 };
