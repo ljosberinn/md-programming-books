@@ -9,9 +9,10 @@ const likeThis = (el) => {
     if (response.success) {
       const button = $(`#${actualId}`);
       const likeSpan = button.next('span');
-      const likeValue = parseInt(likeSpan.text());
-      likeSpan.text(likeValue + 1);
+      likeSpan.text(parseInt(likeSpan.text()) + 1);
       button.addClass('thumbs-up');
+    } else if (response.message) {
+      alert(response.message);
     }
   });
 };

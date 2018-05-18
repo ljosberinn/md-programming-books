@@ -11,9 +11,10 @@ var likeThis = function likeThis(el) {
     if (response.success) {
       var button = $('#' + actualId);
       var likeSpan = button.next('span');
-      var likeValue = parseInt(likeSpan.text());
-      likeSpan.text(likeValue + 1);
+      likeSpan.text(parseInt(likeSpan.text()) + 1);
       button.addClass('thumbs-up');
+    } else if (response.message) {
+      alert(response.message);
     }
   });
 };

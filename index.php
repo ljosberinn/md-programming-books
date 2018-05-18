@@ -26,6 +26,7 @@ setGeneralHeaders();
     require 'app/header.php';
 
     ?>
+
   </header>
 
   <main class="container">
@@ -39,11 +40,13 @@ setGeneralHeaders();
   </main>
 
   <footer class="page-footer teal">
+
     <?php
 
     require 'app/footer.php';
 
     ?>
+
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>

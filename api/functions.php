@@ -1,10 +1,10 @@
 <?php
 
 /**
-* @method public appendJSFiles
-* @param array $files [$ownJSFiles, relative links to file]
-* @return string [script link]
-*/
+ * @method public appendJSFiles
+ * @param array $files [$ownJSFiles, relative links to file]
+ * @return string [script link]
+ */
 function appendFiles($files)
 {
     foreach ($files as $link => $subInfo) {
@@ -22,7 +22,7 @@ function appendFiles($files)
         if ($subInfo["type"] === "js") {
             echo '
             <script ' .$mode. ' src="' .$link. '' .$lastModified. '"></script>';
-        } else if ($subInfo["type"] ==== "css") {
+        } else if ($subInfo["type"] === "css") {
             echo '
             <link rel="stylesheet" href="' .$link. '' .$lastModified. '" />';
         }
@@ -30,10 +30,10 @@ function appendFiles($files)
 }
 
 /**
-* @ method public setGeneralHeaders
-*
-* @return mixed [general headers used for protecting the page]
-*/
+ * @method public setGeneralHeaders
+ *
+ * @return mixed [general headers used for protecting the page]
+ */
 function setGeneralHeaders()
 {
     $generalHeaders = [
@@ -49,10 +49,12 @@ function setGeneralHeaders()
 }
 
 /**
-* @ method public updateType
-*
-* @return string [converts integer to actual type]
-*/
+ * @method public updateType
+ *
+ * @param integer $type [integer type of db entry]
+ *
+ * @return string [converts integer to actual type]
+ */
 function updateType($type)
 {
     switch($type) {
@@ -79,9 +81,15 @@ function updateType($type)
 /**
  * @method public updateAddedTimestamp
  *
+ * @param string $date [mysql added timestamp]
+ *
  * @return int [days since added]
  */
-function updateAddedTimestamp($date) {
+function updateAddedTimestamp($date)
+{
     return strtotime($date, time('now')) * 1000;
 }
+
+
 ?>
+
