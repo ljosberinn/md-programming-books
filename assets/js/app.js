@@ -1,6 +1,4 @@
-String.prototype.capitalize = function () {
-  return this.charAt(0).toUpperCase() + this.slice(1);
-};
+const capitalize = word => word.charAt(0).toUpperCase() + word.slice(1);
 
 const likeThis = (el) => {
   const actualId = el.id;
@@ -63,7 +61,7 @@ $.getJSON('api/getJSON.php', (data) => {
     <li>
       <div class="collapsible-header hoverable card-panel">
         <i class="material-icons">filter_drama</i>
-        ${i.capitalize()}
+        ${capitalize(i)}
         <span class="badge">${dataset.length.toLocaleString('en-US')} items</span>
       </div>
       <div class="collapsible-body secondary">

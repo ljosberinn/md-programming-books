@@ -1,7 +1,7 @@
 'use strict';
 
-String.prototype.capitalize = function() {
-  return this.charAt(0).toUpperCase() + this.slice(1);
+var capitalize = function capitalize(word) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
 };
 
 var likeThis = function likeThis(el) {
@@ -81,7 +81,7 @@ $.getJSON('api/getJSON.php', function(data) {
   $.each(data, function(i, dataset) {
     template +=
       '\n    <li>\n      <div class="collapsible-header hoverable card-panel">\n        <i class="material-icons">filter_drama</i>\n        ' +
-      i.capitalize() +
+      capitalize(i) +
       '\n        <span class="badge">' +
       dataset.length.toLocaleString('en-US') +
       ' items</span>\n      </div>\n      <div class="collapsible-body secondary">\n        <ul class="collection">\n    ';
