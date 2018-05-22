@@ -1,12 +1,13 @@
 <nav role="navigation">
   <div class="nav-wrapper container">
-    <a class="brand-logo" href="/">Logo</a>
+    <a class="brand-logo" href="/">Free programming books</a>
+    <!--
     <a class="button-collapse" data-activates="nav_mobile" href="javascript:;">
       <i class="material-icons">menu</i>
     </a>
 
 
-    <!--<ul class="right hide-on-med-and-down">
+    <ul class="right hide-on-med-and-down">
       <li>
         <a class="dropdown-button" data-activates="dropdown-general" data-beloworigin="true" href="javascript:;">General
           <i class="material-icons right">arrow_drop_down</i>

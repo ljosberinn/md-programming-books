@@ -49,36 +49,6 @@ function setGeneralHeaders()
 }
 
 /**
- * @method public updateType
- *
- * @param integer $type [integer type of db entry]
- *
- * @return string [converts integer to actual type]
- */
-function updateType($type)
-{
-    switch($type) {
-    case 0:
-        $newType = 'PDF';
-        break;
-    case 1:
-        $newType = 'Website';
-        break;
-    case 2:
-        $newType = 'Mixed';
-        break;
-    case 3:
-        $newType = '';
-        break;
-    default:
-        $newType = 'Unknown';
-        break;
-    }
-
-    return $newType;
-}
-
-/**
  * @method public updateAddedTimestamp
  *
  * @param string $date [mysql added timestamp]

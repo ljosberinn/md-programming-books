@@ -17,6 +17,10 @@ if (isset($_POST['like'])) {
 
     $result = [];
 
+    if (strpos($_POST['like'], 'search-') !== false) {
+        $_POST['like'] = substr($_POST['like'], 7);
+    }
+
     $payload = explode('-', $_POST['like']);
 
     $category = filter_var($payload[0], FILTER_SANITIZE_STRING);
@@ -59,18 +63,20 @@ if (isset($_POST['like'])) {
     }
 
     $allowedCategories = [];
-    $fetchAllCategoriesStmt = "SELECT DISTINCT(`category`) FROM `books`";
+    $fetchAllCategoriesStmt = "SELECT * FROM `pdf_categories`";
     $fetchAllCategories = $conn->query($fetchAllCategoriesStmt);
 
     if ($fetchAllCategories->num_rows > 0) {
         while ($dataset = $fetchAllCategories->fetch_assoc()) {
-            array_push($allowedCategories, $dataset['category']);
+            $allowedCategories[$dataset['id']] = $dataset['category'];
         }
     }
 
+    $categoryId = array_search($category, $allowedCategories);
+
     if (in_array($category, $allowedCategories)) {
         $resources = [];
-        $getCategoryEntriesStmt = "SELECT * FROM `books` WHERE `category` = '" .$category. "' ORDER BY `title` ASC";
+        $getCategoryEntriesStmt = "SELECT `title` FROM `pdfs` WHERE `category` = " .$categoryId. " ORDER BY `title` ASC";
         $getCategoryEntries = $conn->query($getCategoryEntriesStmt);
 
         if ($getCategoryEntries->num_rows > 0) {
@@ -81,9 +87,9 @@ if (isset($_POST['like'])) {
 
         $resourceToBeUpdated = $resources[$index];
 
-        $updateStmt = "UPDATE `books`
+        $updateStmt = "UPDATE `pdfs`
         SET `likes` = `likes` + 1
-        WHERE `category` = '" .$resourceToBeUpdated['category']. "'
+        WHERE `category` = " .$categoryId. "
         AND `title` = '" .$resourceToBeUpdated['title']. "'";
 
         $update = $conn->query($updateStmt);

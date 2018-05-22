@@ -14,7 +14,12 @@ ob_end_clean();
 $conn = new mysqli($host, $user, $pw, $db);
 $conn->set_charset('utf8');
 
-$getAllBooksStmt = "SELECT * FROM `books` ORDER BY `category` ASC, `title` ASC";
+$getAllBooksStmt = "SELECT pdf_categories.category, pdf_types.type, `title`, `url`, `src`, `added`, `likes` FROM `pdfs`
+LEFT JOIN `pdf_types` ON
+    pdfs.type = pdf_types.id
+LEFT JOIN `pdf_categories` ON
+    pdfs.category = pdf_categories.id
+ORDER BY pdf_categories.category ASC, `title` ASC";
 $getAllBooks = $conn->query($getAllBooksStmt);
 
 $result = [];
@@ -25,7 +30,6 @@ if ($getAllBooks->num_rows > 0) {
             $result[$dataset['category']] = [];
         }
 
-        $dataset['type'] = updateType($dataset['type']);
         $dataset['added'] = updateAddedTimestamp($dataset['added']);
         array_push($result[$dataset['category']], $dataset);
     }

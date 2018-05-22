@@ -1,8 +1,9 @@
-i.material-icons, a.material-icons {
+i.material-icons,
+a.material-icons {
   vertical-align: middle;
 }
 
-[id*="like-"] {
+[id*='like-'] {
   font-size: 18px;
   cursor: pointer;
   transition: 0.3s;
@@ -19,11 +20,58 @@ nav {
 .collapsible-header,
 .collection.with-header .collection-header,
 .collection .collection-item {
-  background-color: #42394f;
+  background-color: #544864;
 }
 
 .collapsible-header {
   position: relative;
+  margin: 0.3rem 0;
+}
+
+.collapsible > li:not(.active) .collapsible-header {
+  border-radius: 5px;
+}
+
+.collapsible > li.active .collapsible-header {
+  border-radius: 5px 5px 0 0;
+}
+
+.collapsible-body li:last-of-type {
+  border-radius: 0 0 5px 5px;
+}
+
+.collection .collection-item {
+  border-bottom: 1px solid #e0e0e040;
+}
+
+li .collapsible-header {
+  border-bottom: none;
+}
+
+div.row {
+  margin: 20px 0 calc(20px - 0.5rem) 0;
+}
+
+#results,
+.divider {
+  display: none;
+}
+
+#content {
+  transition: 0.5s ease-in-out;
+  will-change: opacity;
+}
+
+.faded {
+  opacity: 0.25;
+}
+
+span.badge {
+  color: lightgrey;
+}
+
+li .collapsible-body:last-of-type {
+  border-bottom: none;
 }
 
 body {
@@ -145,27 +193,33 @@ main > .container > .section {
     -webkit-transform-origin: 50% 50%;
     transform-origin: 50% 50%;
   }
+
   15% {
     -webkit-transform: translateY(-10px) rotate(-6deg);
     transform: translateY(-10px) rotate(-6deg);
   }
+
   30% {
     -webkit-transform: translateY(5px) rotate(6deg);
     transform: translateY(5px) rotate(6deg);
   }
+
   45% {
     -webkit-transform: translateY(-5px) rotate(-3.6deg);
     transform: translateY(-5px) rotate(-3.6deg);
   }
+
   60% {
     -webkit-transform: translateY(3px) rotate(2.4deg);
     transform: translateY(3px) rotate(2.4deg);
   }
+
   75% {
     -webkit-transform: translateY(-2px) rotate(-1.2deg);
     transform: translateY(-2px) rotate(-1.2deg);
   }
 }
+
 @keyframes wobble-ver-left {
   0%,
   100% {
@@ -174,22 +228,27 @@ main > .container > .section {
     -webkit-transform-origin: 50% 50%;
     transform-origin: 50% 50%;
   }
+
   15% {
     -webkit-transform: translateY(-10px) rotate(-6deg);
     transform: translateY(-10px) rotate(-6deg);
   }
+
   30% {
     -webkit-transform: translateY(5px) rotate(6deg);
     transform: translateY(5px) rotate(6deg);
   }
+
   45% {
     -webkit-transform: translateY(-5px) rotate(-3.6deg);
     transform: translateY(-5px) rotate(-3.6deg);
   }
+
   60% {
     -webkit-transform: translateY(3px) rotate(2.4deg);
     transform: translateY(3px) rotate(2.4deg);
   }
+
   75% {
     -webkit-transform: translateY(-2px) rotate(-1.2deg);
     transform: translateY(-2px) rotate(-1.2deg);
