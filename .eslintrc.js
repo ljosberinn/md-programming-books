@@ -1,15 +1,13 @@
 module.exports = {
-  extends: 'airbnb-base',
-
+  extends: ['airbnb-base'],
   env: {
     browser: true,
     es6: true,
-    node: true,
-    jquery: true,
+    jquery: true
   },
   parserOptions: {
     sourceType: 'module',
-    ecmaVersion: 6,
+    ecmaVersion: 6
   },
   rules: {
     'no-this-before-super': 'warn',
@@ -18,7 +16,13 @@ module.exports = {
     'no-unused-vars': 'warn',
     'constructor-super': 'warn',
     'valid-typeof': 'warn',
-    'linebreak-style': 0,
+    'linebreak-style': ['warn', 'unix'],
+    eqeqeq: ['warn', 'smart'],
+    'brace-style': ['warn', '1tbs'],
+    'max-len': ['warn', 150],
+    'newline-per-chained-call': ['error', { ignoreChainWithDepth: 2 }],
+    'arrow-parens': ['warn', 'as-needed'],
+    'comma-dangle': ['warn', 'never']
   },
-  globals: {},
+  globals: {}
 };

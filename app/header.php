@@ -1,6 +1,6 @@
 <nav role="navigation">
   <div class="nav-wrapper container">
-    <a class="brand-logo" href="/">Free programming books</a>
+    <a class="brand-logo" href="/">Fancy headline</a>
     <!--
     <a class="button-collapse" data-activates="nav_mobile" href="javascript:;">
       <i class="material-icons">menu</i>

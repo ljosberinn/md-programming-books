@@ -3,7 +3,7 @@ a.material-icons {
   vertical-align: middle;
 }
 
-[id*='like-'] {
+[id*="like-"] {
   font-size: 18px;
   cursor: pointer;
   transition: 0.3s;
@@ -96,9 +96,9 @@ main {
 
 .material-icons {
   text-rendering: optimizeLegibility;
-  -webkit-font-feature-settings: 'liga';
-  -moz-font-feature-settings: 'liga';
-  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: "liga";
+  -moz-font-feature-settings: "liga";
+  font-feature-settings: "liga";
 }
 
 nav ul li:hover,
@@ -164,7 +164,7 @@ main > .container > .section {
   flex: 1;
 }
 
-[type='checkbox'].no-label + label {
+[type="checkbox"].no-label + label {
   padding-left: 10px;
 }
 

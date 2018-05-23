@@ -10,9 +10,9 @@
 
 <!-- general page information -->
 <meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-title" content="Collection of free development books" />
+<meta name="apple-mobile-web-app-title" content="PH" />
 <meta name="mobile-web-app-capable" content="yes" />
-<meta name="application-name" content="Collection of free development books" />
+<meta name="application-name" content="PH" />
 <meta name="description" content="DESCRIPTION" />
 
 <meta name="author" content="Gerrit Alex" />
@@ -29,12 +29,12 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
 <link rel="manifest" href="/manifest.json" />
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#fff" />
-<meta name="apple-mobile-web-app-title" content="Collection of free development books" />
-<meta name="application-name" content="Collection of free development books" />
+<meta name="apple-mobile-web-app-title" content="PH" />
+<meta name="application-name" content="PH" />
 <meta name="theme-color" content="#fff" />
 
 <!-- OpenGraph for Facebook & WhatsApp -->
-<meta property="og:title" content="Collection of free development books" />
+<meta property="og:title" content="PH" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://this.url/">
 <meta property="og:description" content="DESCRIPTION" />
@@ -44,10 +44,10 @@
 
 <!-- Twitter page description -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Collection of free development books" />
+<meta name="twitter:title" content="PH" />
 <meta name="twitter:description" content="DESCRIPTION" />
 
-<title>Collection of free development books</title>
+<title>PH</title>
 
 <!-- DNS prefetch -->
 

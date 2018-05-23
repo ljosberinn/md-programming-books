@@ -4,13 +4,15 @@ let jsonData;
 
 const capitalize = word => word.charAt(0).toUpperCase() + word.slice(1);
 
-const likeThis = (el) => {
+const likeThis = el => {
   const actualId = el.id;
   const id = actualId.replace(/like-/, '');
-  $.post('api/like.php', { like: id }, (response) => {
+
+  $.post('api/like.php', { like: id }, response => {
     if (response.success) {
       const button = $(`#${actualId}`);
       const likeSpan = button.next('span');
+
       likeSpan.text(parseInt(likeSpan.text()) + 1);
       button.addClass('thumbs-up');
     } else if (response.message) {
@@ -19,16 +21,16 @@ const likeThis = (el) => {
   });
 };
 
-const addLikeEventListeners = (searchParameter) => {
-  let likeElements;
+const addLikeEventListeners = searchParameter => {
+  let likeSelector = '';
 
   if (!searchParameter) {
-    likeElements = $('[id*=like-]');
+    likeSelector = '[id*=like-]';
   } else {
-    likeElements = $('[id*=search-like-]');
+    likeSelector = '[id*=search-like-]';
   }
 
-  $.each(likeElements, (i, el) => {
+  $.each($(likeSelector), (i, el) => {
     el.addEventListener('click', function likeHandler() {
       this.removeEventListener('click', likeHandler, true);
       likeThis(el);
@@ -36,18 +38,18 @@ const addLikeEventListeners = (searchParameter) => {
   });
 };
 
-const returnCollectionItem = (file, dataset, iteration, search) => {
-  let badgeClass = 'badge';
+const returnCollectionItem = (file, language, iteration, search) => {
+  let [badgeClass, likeId] = ['badge', ''];
 
   if (now - file.added <= 604800000) {
     badgeClass += ' new';
   }
 
-  let likeId = '';
   if (search) {
     likeId = 'search-';
   }
-  likeId += `like-${dataset}-${iteration}`;
+
+  likeId += `like-${language}-${iteration}`;
 
   return `
   <li class="collection-item">
@@ -59,11 +61,11 @@ const returnCollectionItem = (file, dataset, iteration, search) => {
   </li>`;
 };
 
-const returnTemplateBodyStart = (i, dataset) => `
+const returnTemplateBodyStart = (language, dataset) => `
     <li>
       <div class="collapsible-header">
         <i class="material-icons">android</i>
-        ${capitalize(i)}
+        ${capitalize(language)}
         <span class="badge">${dataset.length.toLocaleString('en-US')} items</span>
       </div>
       <div class="collapsible-body secondary">
@@ -71,17 +73,17 @@ const returnTemplateBodyStart = (i, dataset) => `
     `;
 const returnTemplateBodyEnding = () => '</ul></div></li>';
 
-const toggleContentOpacity = (add) => {
-  const content = $('#content');
+const toggleContentOpacity = add => {
+  const $content = $('#content');
 
   if (add) {
-    content.addClass('faded');
+    $content.addClass('faded');
   } else {
-    content.removeClass('faded');
+    $content.removeClass('faded');
   }
 };
 
-const compareSearchResultWithEmpty = (template) => {
+const compareSearchResultWithEmpty = template => {
   let string = template;
   if (string.length === 80) {
     string = `
@@ -108,11 +110,11 @@ const compareSearchResultWithEmpty = (template) => {
 const returnTemplateContent = (container, search) => {
   let string = '';
 
-  $.each(container, (i, dataset) => {
-    string += returnTemplateBodyStart(i, dataset);
+  $.each(container, (language, dataset) => {
+    string += returnTemplateBodyStart(language, dataset);
 
     $.each(dataset, (k, file) => {
-      string += returnCollectionItem(file, i, k, search);
+      string += returnCollectionItem(file, language, k, search);
     });
 
     string += returnTemplateBodyEnding();
@@ -122,30 +124,54 @@ const returnTemplateContent = (container, search) => {
 
   return string;
 };
-const searchIterator = (value) => {
-  const result = {};
+
+const searchIterator = value => {
+  const [result, $selectedType, $selectedLanguage] = [{}, $('#filter-type').val(), $('#filter-language').val()];
 
   $.each(jsonData, (language, el) => {
-    if (language.toLowerCase() === value || language.indexOf(value) > -1) {
-      result[language] = el;
-    } else {
-      $.each(el, (i, item) => {
-        if (item.type.toLowerCase().indexOf(value) > -1 || item.title.indexOf(value) > -1) {
-          let currentL = 0;
-          if (result[language]) {
-            currentL = result[language].length;
-          }
-          if (currentL > 0) {
-            result[language].push(item);
-          } else {
-            result[language] = [item];
-          }
+    $.each(el, (i, subObj) => {
+      const stringifiedObj = JSON.stringify(subObj).toLowerCase();
+
+      // implement filtering based on selection
+
+      if (stringifiedObj.indexOf(value) > -1) {
+        let currentL = 0;
+
+        if (result[language]) {
+          currentL = result[language].length;
         }
-      });
-    }
+        if (currentL > 0) {
+          result[language].push(subObj);
+        } else {
+          result[language] = [subObj];
+        }
+      }
+    });
   });
 
   return result;
+};
+
+const appendFilterOptions = data => {
+  const [typeSelector, languageSelector, types] = [$('#filter-type'), $('#filter-language'), []];
+
+  let [languageString, typeString] = ['', ''];
+
+  $.each(data, (language, obj) => {
+    languageString += `<option value="${language.toLowerCase()}">${capitalize(language)}</option>`;
+    $.each(obj, (i, subObj) => {
+      if (types.indexOf(subObj.type) === -1) {
+        types.push(subObj.type);
+      }
+    });
+  });
+
+  $.each(types, (i, type) => {
+    typeString += `<option value="${type.toLowerCase()}">${type}</option>`;
+  });
+
+  languageSelector.append(languageString);
+  typeSelector.append(typeString);
 };
 
 const reinitiateCollapsibles = () => {
@@ -154,24 +180,30 @@ const reinitiateCollapsibles = () => {
     .collapsible();
 };
 
-const search = (value) => {
-  const result = searchIterator(value);
-  const template = returnTemplateContent(result, true);
-
-  $('#results')
-    .html(template)
-    .css('display', 'block');
-  addLikeEventListeners(true);
-  reinitiateCollapsibles();
-};
-
-const toggleDividerVisibility = (add) => {
-  const divider = $('#divider');
+const toggleDividerVisibility = add => {
+  const $divider = $('#divider');
 
   if (add) {
-    divider.css('display', 'block');
+    $divider.css('display', 'block');
   } else {
-    divider.css('display', 'none');
+    $divider.css('display', 'none');
+  }
+};
+
+const search = value => {
+  if (value.length === 0) {
+    $('#results').empty();
+    toggleDividerVisibility();
+    toggleContentOpacity();
+  } else {
+    const result = searchIterator(value);
+    const template = returnTemplateContent(result, true);
+
+    $('#results')
+      .html(template)
+      .css('display', 'block');
+    addLikeEventListeners(true);
+    reinitiateCollapsibles();
   }
 };
 
@@ -180,24 +212,40 @@ const removePreviousResults = () => {
   toggleDividerVisibility('add');
 };
 
+const addFilterEventListeners = () => {
+  const objs = [$('#filter-type')[0], $('#filter-language')[0]];
+
+  $.each(objs, (i, el) => {
+    el.addEventListener('select', () => {
+      search($('#search')
+        .val()
+        .toLowerCase());
+    });
+  });
+};
+
 $('#search')[0].addEventListener('input', function searchHandler() {
   if ($('#results').length !== 0) {
     removePreviousResults();
   }
+
   toggleContentOpacity(true);
-  const searchVal = $(this)
+
+  search($(this)
     .val()
-    .toLowerCase();
-  search(searchVal);
+    .toLowerCase());
 });
 
-$('.button-collapse').sideNav();
-
-$.getJSON('api/getJSON.php', (data) => {
+$.getJSON('api/getJSON.php', data => {
   jsonData = data;
   const template = returnTemplateContent(jsonData, false);
+
+  appendFilterOptions(jsonData);
+  addFilterEventListeners();
   $('#content').append(template);
 
   $('.collapsible').collapsible();
+  $('.button-collapse').sideNav();
+  $('select').material_select();
   addLikeEventListeners(false);
 });

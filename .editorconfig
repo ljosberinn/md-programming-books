@@ -27,17 +27,9 @@
   "window.zoomLevel": -1.5,
   // explorer
   "explorer.decorations.badges": false,
-  // prettier
-  "prettier.eslintIntegration": true,
-  "prettier.tabWidth": 2,
-  "prettier.proseWrap": "always",
-  "prettier.printWidth": 200,
-  "prettier.singleQuote": true,
-  "prettier.stylelintIntegration": true,
-  "stylelint.enable": true,
   // sync
   "sync.gist": "5830caef5951e804b8088dc6901a5b6c",
-  "sync.lastUpload": "2018-05-07T13:53:10.467Z",
+  "sync.lastUpload": "2018-05-15T14:38:21.263Z",
   "sync.autoDownload": false,
   "sync.autoUpload": false,
   "sync.lastDownload": "",
@@ -60,6 +52,10 @@
   },
   // files
   "files.trimTrailingWhitespace": true,
+  // custom css
+  "vscode_custom_css.imports": [
+    "/Volumes/System/Users/auszubilender1/wesbos.css"
+  ],
   // php formatter
   "phpformatter.composer": true,
   // php
@@ -89,5 +85,19 @@
   },
   "editor.renderIndentGuides": false,
   // minify on save
-  "es6-css-minify.minifyOnSave": "exists"
+  "es6-css-minify.minifyOnSave": "exists",
+  // javascript formatting via prettier
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "stylelint.enable": true,
+  "prettier.eslintIntegration": true,
+  "prettier.singleQuote": true,
+  "prettier.stylelintIntegration": true,
+  "prettier.tabWidth": 2,
+  "prettier.trailingComma": "none",
+  "prettier.semi": false,
+  "prettier.proseWrap": "preserve",
+  "prettier.arrowParens": "avoid",
+  "prettier.printWidth": 200
 }
