@@ -65,6 +65,11 @@ $cssFiles = [
         "params" => "",
         "type" => "css",
     ],
+    "assets/css/ripple.min.css" => [
+        "mode" => "",
+        "params" => "",
+        "type" => "css",
+    ],
 ];
 
 appendFiles($cssFiles);

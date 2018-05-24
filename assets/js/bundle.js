@@ -119,13 +119,17 @@ var returnTemplateContent = function returnTemplateContent(container, search) {
 };
 
 var searchIterator = function searchIterator(value) {
-  var _ref2 = [$('#filter-type').val(), $('#filter-language').val()],
-      $selectedType = _ref2[0],
-      $selectedLanguage = _ref2[1];
+  var $selectedLanguage = $('#filter-language').val();
+  var _ref2 = [{}, $('#filter-type').val()],
+      result = _ref2[0],
+      $selectedType = _ref2[1];
 
-  var result = {};
 
-  function performSearch(searchLanguage, searchType) {
+  if ($selectedType === 'select or reset') {
+    $selectedType = null;
+  }
+
+  function performSearch(searchLanguage) {
     var obj = {};
 
     $.each(jsonData, function (language, el) {
@@ -158,12 +162,16 @@ var searchIterator = function searchIterator(value) {
     return obj;
   }
 
-  if ($selectedLanguage !== null) {
+  if ($selectedLanguage.length !== 0) {
     $.each($selectedLanguage, function (i, searchLanguage) {
       Object.assign(result, performSearch(searchLanguage));
     });
   } else {
     result = performSearch();
+  }
+
+  if ($selectedLanguage.length === 0 && $selectedType === null && value === '') {
+    result = {};
   }
 
   return result;
@@ -209,6 +217,31 @@ var toggleDividerVisibility = function toggleDividerVisibility(add) {
   }
 };
 
+var removePreviousResults = function removePreviousResults() {
+  $('#results').empty();
+  toggleDividerVisibility('add');
+};
+
+var initiateRipple = function initiateRipple() {
+  $.ripple('.collection-item', {
+    debug: false,
+    on: 'mousedown',
+
+    opacity: 0.2,
+    color: 'auto',
+    multi: false,
+
+    duration: 0.5,
+
+    rate: function rate(pxPerSecond) {
+      return pxPerSecond;
+    },
+
+
+    easing: 'linear'
+  });
+};
+
 var search = function search(value) {
   if ($('#results').length !== 0) {
     removePreviousResults();
@@ -227,12 +260,8 @@ var search = function search(value) {
     $('#results').html(template).css('display', 'block');
     addLikeEventListeners(true);
     reinitiateCollapsibles();
+    initiateRipple();
   }
-};
-
-var removePreviousResults = function removePreviousResults() {
-  $('#results').empty();
-  toggleDividerVisibility('add');
 };
 
 var addFilterEventListeners = function addFilterEventListeners() {
@@ -271,4 +300,141 @@ $.getJSON('api/getJSON.php', function (data) {
   $('select').material_select();
 
   addLikeEventListeners(false);
+  initiateRipple();
 });
+'use strict';
+
+(function ($, document, Math) {
+  $.ripple = function (selector, options) {
+    var self = this;
+
+    var _log = self.log = function () {
+      if (self.defaults.debug && console && console.log) {
+        var _console;
+
+        (_console = console).log.apply(_console, arguments);
+      }
+    };
+
+    self.selector = selector;
+    self.defaults = {
+      debug: false,
+      on: 'mousedown',
+
+      opacity: 0.4,
+      color: 'auto',
+      multi: false,
+
+      duration: 0.7,
+      rate: function rate(pxPerSecond) {
+        return pxPerSecond;
+      },
+
+
+      easing: 'linear'
+    };
+
+    self.defaults = $.extend({}, self.defaults, options);
+
+    var Trigger = function Trigger(e) {
+      var $this = $(this);
+      var $ripple = void 0;
+      var settings = void 0;
+
+      $this.addClass('has-ripple');
+
+      // This instances settings
+      settings = $.extend({}, self.defaults, $this.data());
+
+      // Create the ripple element
+      if (settings.multi || !settings.multi && $this.find('.ripple').length === 0) {
+        $ripple = $('<span></span>').addClass('ripple');
+        $ripple.appendTo($this);
+
+        _log('Create: Ripple');
+
+        // Set ripple size
+        if (!$ripple.height() && !$ripple.width()) {
+          var size = Math.max($this.outerWidth(), $this.outerHeight());
+          $ripple.css({
+            height: size,
+            width: size
+          });
+          _log('Set: Ripple size');
+        }
+
+        // Give the user the ability to change the rate of the animation
+        // based on element width
+        if (settings.rate && typeof settings.rate == 'function') {
+          // rate = pixels per second
+          var rate = Math.round($ripple.width() / settings.duration);
+
+          // new amount of pixels per second
+          var filteredRate = settings.rate(rate);
+
+          // Determine the new duration for the animation
+          var newDuration = $ripple.width() / filteredRate;
+
+          // Set the new duration if it has not changed
+          if (settings.duration.toFixed(2) !== newDuration.toFixed(2)) {
+            _log('Update: Ripple Duration', {
+              from: settings.duration,
+              to: newDuration
+            });
+            settings.duration = newDuration;
+          }
+        }
+
+        // Set the color and opacity
+        var color = settings.color == 'auto' ? $this.css('color') : settings.color;
+        var css = {
+          animationDuration: settings.duration.toString() + 's',
+          animationTimingFunction: settings.easing,
+          background: color,
+          opacity: settings.opacity
+        };
+
+        _log('Set: Ripple CSS', css);
+        $ripple.css(css);
+      }
+
+      // Ensure we always have the ripple element
+      if (!settings.multi) {
+        _log('Set: Ripple Element');
+        $ripple = $this.find('.ripple');
+      }
+
+      // Kill animation
+      _log('Destroy: Ripple Animation');
+      $ripple.removeClass('ripple-animate');
+
+      // Retrieve coordinates
+      var x = e.pageX - $this.offset().left - $ripple.width() / 2;
+      var y = e.pageY - $this.offset().top - $ripple.height() / 2;
+
+      /**
+             * We want to delete the ripple elements if we allow multiple so we dont sacrifice any page
+             * performance. We don't do this on single ripples because once it has rendered, we only
+             * need to trigger paints thereafter.
+             */
+      if (settings.multi) {
+        _log('Set: Ripple animationend event');
+        $ripple.one('animationend webkitAnimationEnd oanimationend MSAnimationEnd', function () {
+          _log('Note: Ripple animation ended');
+          _log('Destroy: Ripple');
+          $(this).remove();
+        });
+      }
+
+      // Set position and animate
+      _log('Set: Ripple location');
+      _log('Set: Ripple animation');
+      $ripple.css({
+        top: y + 'px',
+        left: x + 'px'
+      }).addClass('ripple-animate');
+    };
+
+    $(document).on(self.defaults.on, self.selector, Trigger);
+  };
+})(jQuery, document, Math);

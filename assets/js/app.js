@@ -132,10 +132,14 @@ const returnTemplateContent = (container, search) => {
 };
 
 const searchIterator = value => {
-  const [$selectedType, $selectedLanguage] = [$('#filter-type').val(), $('#filter-language').val()];
-  let result = {};
+  const $selectedLanguage = $('#filter-language').val();
+  let [result, $selectedType] = [{}, $('#filter-type').val()];
 
-  function performSearch(searchLanguage, searchType) {
+  if ($selectedType === 'select or reset') {
+    $selectedType = null;
+  }
+
+  function performSearch(searchLanguage) {
     const obj = {};
 
     $.each(jsonData, (language, el) => {
@@ -168,12 +172,16 @@ const searchIterator = value => {
     return obj;
   }
 
-  if ($selectedLanguage !== null) {
+  if ($selectedLanguage.length !== 0) {
     $.each($selectedLanguage, (i, searchLanguage) => {
       Object.assign(result, performSearch(searchLanguage));
     });
   } else {
     result = performSearch();
+  }
+
+  if ($selectedLanguage.length === 0 && $selectedType === null && value === '') {
+    result = {};
   }
 
   return result;
@@ -217,6 +225,30 @@ const toggleDividerVisibility = add => {
   }
 };
 
+const removePreviousResults = () => {
+  $('#results').empty();
+  toggleDividerVisibility('add');
+};
+
+const initiateRipple = () => {
+  $.ripple('.collection-item', {
+    debug: false,
+    on: 'mousedown',
+
+    opacity: 0.2,
+    color: 'auto',
+    multi: false,
+
+    duration: 0.5,
+
+    rate(pxPerSecond) {
+      return pxPerSecond;
+    },
+
+    easing: 'linear'
+  });
+};
+
 const search = value => {
   if ($('#results').length !== 0) {
     removePreviousResults();
@@ -237,12 +269,8 @@ const search = value => {
       .css('display', 'block');
     addLikeEventListeners(true);
     reinitiateCollapsibles();
+    initiateRipple();
   }
-};
-
-const removePreviousResults = () => {
-  $('#results').empty();
-  toggleDividerVisibility('add');
 };
 
 const addFilterEventListeners = () => {
@@ -285,4 +313,5 @@ $.getJSON('api/getJSON.php', data => {
   $('select').material_select();
 
   addLikeEventListeners(false);
+  initiateRipple();
 });

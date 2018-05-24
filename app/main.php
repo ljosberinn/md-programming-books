@@ -16,7 +16,7 @@
   <div class="col s4">
     <div class="select-wrapper">
       <select class="select-dropdown dropdown-trigger" id="filter-type">
-        <option disabled selected>select option</option>
+        <option selected>select or reset</option>
       </select>
       <label for="filter-type">filter resource type</label>
     </div>
