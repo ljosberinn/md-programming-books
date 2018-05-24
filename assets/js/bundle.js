@@ -115,6 +115,8 @@ var searchIterator = function searchIterator(value) {
       $selectedLanguage = _ref2[2];
 
 
+  console.log($selectedType, $selectedLanguage);
+
   $.each(jsonData, function (language, el) {
     $.each(el, function (i, subObj) {
       var stringifiedObj = JSON.stringify(subObj).toLowerCase();
@@ -200,10 +202,25 @@ var removePreviousResults = function removePreviousResults() {
 };
 
 var addFilterEventListeners = function addFilterEventListeners() {
-  var objs = [$('#filter-type')[0], $('#filter-language')[0]];
+  var objs = ['#filter-type', '#filter-language'];
+
+  // https://stackoverflow.com/questions/33934893/materializecss-multiple-select-value-stays-in-array-after-unselecting
+  $;
 
   $.each(objs, function (i, el) {
-    el.addEventListener('select', function () {
+    $(el).change(function () {
+      var _ref4 = [[], $(this)],
+          newValuesArr = _ref4[0],
+          select = _ref4[1];
+
+      var ul = select.prev();
+      ul.children('li').toArray().forEach(function (li, i) {
+        if ($(li).hasClass('active')) {
+          newValuesArr.push(select.children('option').toArray()[i].value);
+        }
+      });
+      select.val(newValuesArr);
+
       search($('#search').val().toLowerCase());
     });
   });
@@ -221,14 +238,11 @@ $('#search')[0].addEventListener('input', function searchHandler() {
 
 $.getJSON('api/getJSON.php', function (data) {
   jsonData = data;
-  var template = returnTemplateContent(jsonData, false);
-
+  $('#content').append(returnTemplateContent(jsonData, false));
   appendFilterOptions(jsonData);
   addFilterEventListeners();
-  $('#content').append(template);
-
   $('.collapsible').collapsible();
-  $('.button-collapse').sideNav();
   $('select').material_select();
+
   addLikeEventListeners(false);
 });
