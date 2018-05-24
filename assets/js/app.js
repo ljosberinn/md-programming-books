@@ -61,8 +61,8 @@ const returnCollectionItem = (file, language, iteration, search) => {
   </li>`;
 };
 
-const returnTemplateBodyStart = (language, dataset) => `
-    <li>
+const returnTemplateBodyStart = (language, dataset, iteration) => `
+    <li class="flip-in-hor-bottom" style="animation-delay: ${iteration * 0.1}s;">
       <div class="collapsible-header">
         <i class="material-icons">android</i>
         ${capitalize(language)}
@@ -83,11 +83,8 @@ const toggleContentOpacity = add => {
   }
 };
 
-const compareSearchResultWithEmpty = template => {
-  let string = template;
-  if (string.length === 80) {
-    string = `
-      <li class="active">
+const returnEmptyTemplate = () => `
+      <li class="flip-in-hor-bottom active">
         <div class="collapsible-header active">
           <i class="material-icons">sentiment_dissatisfied</i>
           Sorry, nothing was found...
@@ -101,6 +98,13 @@ const compareSearchResultWithEmpty = template => {
           </ul>
         </div>
       </li>`;
+
+const compareSearchResultWithEmpty = template => {
+  const strLen = template.length;
+  let string = template;
+
+  if (strLen === 80 || strLen === 0) {
+    string = returnEmptyTemplate();
     toggleContentOpacity(false);
   }
 
@@ -108,16 +112,18 @@ const compareSearchResultWithEmpty = template => {
 };
 
 const returnTemplateContent = (container, search) => {
-  let string = '';
+  let [string, iteration] = ['', 0];
 
   $.each(container, (language, dataset) => {
-    string += returnTemplateBodyStart(language, dataset);
+    string += returnTemplateBodyStart(language, dataset, iteration);
 
     $.each(dataset, (k, file) => {
       string += returnCollectionItem(file, language, k, search);
     });
 
     string += returnTemplateBodyEnding();
+
+    iteration += 1;
   });
 
   string = compareSearchResultWithEmpty(string);
@@ -126,30 +132,49 @@ const returnTemplateContent = (container, search) => {
 };
 
 const searchIterator = value => {
-  const [result, $selectedType, $selectedLanguage] = [{}, $('#filter-type').val(), $('#filter-language').val()];
+  const [$selectedType, $selectedLanguage] = [$('#filter-type').val(), $('#filter-language').val()];
+  let result = {};
 
-  console.log($selectedType, $selectedLanguage);
+  function performSearch(searchLanguage, searchType) {
+    const obj = {};
 
-  $.each(jsonData, (language, el) => {
-    $.each(el, (i, subObj) => {
-      const stringifiedObj = JSON.stringify(subObj).toLowerCase();
-
-      // implement filtering based on selection
-
-      if (stringifiedObj.indexOf(value) > -1) {
-        let currentL = 0;
-
-        if (result[language]) {
-          currentL = result[language].length;
-        }
-        if (currentL > 0) {
-          result[language].push(subObj);
-        } else {
-          result[language] = [subObj];
-        }
+    $.each(jsonData, (language, el) => {
+      if (searchLanguage && searchLanguage !== language.toLowerCase()) {
+        return true;
       }
+
+      $.each(el, (i, subObj) => {
+        const stringifiedObj = JSON.stringify(subObj).toLowerCase();
+
+        if ($selectedType !== null && $selectedType !== subObj.type.toLowerCase()) {
+          return true;
+        }
+
+        if (stringifiedObj.indexOf(value) > -1) {
+          let currentL = 0;
+
+          if (obj[language]) {
+            currentL = obj[language].length;
+          }
+          if (currentL > 0) {
+            obj[language].push(subObj);
+          } else {
+            obj[language] = [subObj];
+          }
+        }
+      });
     });
-  });
+
+    return obj;
+  }
+
+  if ($selectedLanguage !== null) {
+    $.each($selectedLanguage, (i, searchLanguage) => {
+      Object.assign(result, performSearch(searchLanguage));
+    });
+  } else {
+    result = performSearch();
+  }
 
   return result;
 };
@@ -193,7 +218,13 @@ const toggleDividerVisibility = add => {
 };
 
 const search = value => {
-  if (value.length === 0) {
+  if ($('#results').length !== 0) {
+    removePreviousResults();
+  }
+
+  toggleContentOpacity(true);
+
+  if (value.length === 0 && $('#filter-language').val() === null && $('#filter-type').val() === null) {
     $('#results').empty();
     toggleDividerVisibility();
     toggleContentOpacity();
@@ -218,8 +249,6 @@ const addFilterEventListeners = () => {
   const objs = ['#filter-type', '#filter-language'];
 
   // https://stackoverflow.com/questions/33934893/materializecss-multiple-select-value-stays-in-array-after-unselecting
-  $;
-
   $.each(objs, (i, el) => {
     $(el).change(function () {
       const [newValuesArr, select] = [[], $(this)];
@@ -227,9 +256,9 @@ const addFilterEventListeners = () => {
       ul
         .children('li')
         .toArray()
-        .forEach((li, i) => {
+        .forEach((li, k) => {
           if ($(li).hasClass('active')) {
-            newValuesArr.push(select.children('option').toArray()[i].value);
+            newValuesArr.push(select.children('option').toArray()[k].value);
           }
         });
       select.val(newValuesArr);
@@ -242,12 +271,6 @@ const addFilterEventListeners = () => {
 };
 
 $('#search')[0].addEventListener('input', function searchHandler() {
-  if ($('#results').length !== 0) {
-    removePreviousResults();
-  }
-
-  toggleContentOpacity(true);
-
   search($(this)
     .val()
     .toLowerCase());

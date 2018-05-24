@@ -10,13 +10,15 @@
   <div class="col s4 offset-s2">
     <div class="select-wrapper">
       <select multiple class="select-dropdown dropdown-trigger" id="filter-language"></select>
-      <label>filter language</label>
+      <label for="filter-language">filter language</label>
     </div>
   </div>
   <div class="col s4">
     <div class="select-wrapper">
-      <select multiple class="select-dropdown dropdown-trigger" id="filter-type"></select>
-      <label>filter resource type</label>
+      <select class="select-dropdown dropdown-trigger" id="filter-type">
+        <option disabled selected>select option</option>
+      </select>
+      <label for="filter-type">filter resource type</label>
     </div>
   </div>
 </div>

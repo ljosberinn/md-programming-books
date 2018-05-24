@@ -4,9 +4,9 @@
 <meta name="theme-color" content="#fff" />
 
 <!-- All Search Engines -->
-<meta name="robots" content="index,follow" />
+<meta name="robots" content="index,nofollow" />
 <!-- Google Specific -->
-<meta name="googlebot" content="index,follow" />
+<meta name="googlebot" content="index,nofollow" />
 
 <!-- general page information -->
 <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -74,9 +74,7 @@ appendFiles($cssFiles);
 <!-- hacky inline stylesheets -->
 
 <!-- JS external-->
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-<!--
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>-->
 
 <!-- JS internal -->

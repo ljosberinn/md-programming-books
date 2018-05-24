@@ -63,8 +63,8 @@ var returnCollectionItem = function returnCollectionItem(file, language, iterati
   return '\n  <li class="collection-item">\n    <a href="' + file.url + '" ' + aAttributes + '>' + file.title + '</a>\n    <i id="' + likeId + '" class="material-icons">thumb_up</i>\n    <span>' + file.likes + '</span>\n    <a href="' + file.src + '" ' + aAttributes + ' class="material-icons" title="Source">attachment</a>\n    <span class="' + badgeClass + '">' + file.type + '</span>\n  </li>';
 };
 
-var returnTemplateBodyStart = function returnTemplateBodyStart(language, dataset) {
-  return '\n    <li>\n      <div class="collapsible-header">\n        <i class="material-icons">android</i>\n        ' + capitalize(language) + '\n        <span class="badge">' + dataset.length.toLocaleString('en-US') + ' items</span>\n      </div>\n      <div class="collapsible-body secondary">\n        <ul class="collection">\n    ';
+var returnTemplateBodyStart = function returnTemplateBodyStart(language, dataset, iteration) {
+  return '\n    <li class="flip-in-hor-bottom" style="animation-delay: ' + iteration * 0.1 + 's;">\n      <div class="collapsible-header">\n        <i class="material-icons">android</i>\n        ' + capitalize(language) + '\n        <span class="badge">' + dataset.length.toLocaleString('en-US') + ' items</span>\n      </div>\n      <div class="collapsible-body secondary">\n        <ul class="collection">\n    ';
 };
 var returnTemplateBodyEnding = function returnTemplateBodyEnding() {
   return '</ul></div></li>';
@@ -80,10 +80,16 @@ var toggleContentOpacity = function toggleContentOpacity(add) {
   }
 };
 
+var returnEmptyTemplate = function returnEmptyTemplate() {
+  return '\n      <li class="flip-in-hor-bottom active">\n        <div class="collapsible-header active">\n          <i class="material-icons">sentiment_dissatisfied</i>\n          Sorry, nothing was found...\n          <span class="badge">0 items</span>\n        </div>\n        <div class="collapsible-body secondary">\n          <ul class="collection">\n            <li class="collection-item">\n              call to action - contribute\n            </li>\n          </ul>\n        </div>\n      </li>';
+};
+
 var compareSearchResultWithEmpty = function compareSearchResultWithEmpty(template) {
+  var strLen = template.length;
   var string = template;
-  if (string.length === 80) {
-    string = '\n      <li class="active">\n        <div class="collapsible-header active">\n          <i class="material-icons">sentiment_dissatisfied</i>\n          Sorry, nothing was found...\n          <span class="badge">0 items</span>\n        </div>\n        <div class="collapsible-body secondary">\n          <ul class="collection">\n            <li class="collection-item">\n              call to action - contribute\n            </li>\n          </ul>\n        </div>\n      </li>';
+
+  if (strLen === 80 || strLen === 0) {
+    string = returnEmptyTemplate();
     toggleContentOpacity(false);
   }
 
@@ -91,16 +97,20 @@ var compareSearchResultWithEmpty = function compareSearchResultWithEmpty(templat
 };
 
 var returnTemplateContent = function returnTemplateContent(container, search) {
-  var string = '';
+  var string = '',
+      iteration = 0;
+
 
   $.each(container, function (language, dataset) {
-    string += returnTemplateBodyStart(language, dataset);
+    string += returnTemplateBodyStart(language, dataset, iteration);
 
     $.each(dataset, function (k, file) {
       string += returnCollectionItem(file, language, k, search);
     });
 
     string += returnTemplateBodyEnding();
+
+    iteration += 1;
   });
 
   string = compareSearchResultWithEmpty(string);
@@ -109,34 +119,52 @@ var returnTemplateContent = function returnTemplateContent(container, search) {
 };
 
 var searchIterator = function searchIterator(value) {
-  var _ref2 = [{}, $('#filter-type').val(), $('#filter-language').val()],
-      result = _ref2[0],
-      $selectedType = _ref2[1],
-      $selectedLanguage = _ref2[2];
+  var _ref2 = [$('#filter-type').val(), $('#filter-language').val()],
+      $selectedType = _ref2[0],
+      $selectedLanguage = _ref2[1];
 
+  var result = {};
 
-  console.log($selectedType, $selectedLanguage);
+  function performSearch(searchLanguage, searchType) {
+    var obj = {};
 
-  $.each(jsonData, function (language, el) {
-    $.each(el, function (i, subObj) {
-      var stringifiedObj = JSON.stringify(subObj).toLowerCase();
-
-      // implement filtering based on selection
-
-      if (stringifiedObj.indexOf(value) > -1) {
-        var currentL = 0;
-
-        if (result[language]) {
-          currentL = result[language].length;
-        }
-        if (currentL > 0) {
-          result[language].push(subObj);
-        } else {
-          result[language] = [subObj];
-        }
+    $.each(jsonData, function (language, el) {
+      if (searchLanguage && searchLanguage !== language.toLowerCase()) {
+        return true;
       }
+
+      $.each(el, function (i, subObj) {
+        var stringifiedObj = JSON.stringify(subObj).toLowerCase();
+
+        if ($selectedType !== null && $selectedType !== subObj.type.toLowerCase()) {
+          return true;
+        }
+
+        if (stringifiedObj.indexOf(value) > -1) {
+          var currentL = 0;
+
+          if (obj[language]) {
+            currentL = obj[language].length;
+          }
+          if (currentL > 0) {
+            obj[language].push(subObj);
+          } else {
+            obj[language] = [subObj];
+          }
+        }
+      });
     });
-  });
+
+    return obj;
+  }
+
+  if ($selectedLanguage !== null) {
+    $.each($selectedLanguage, function (i, searchLanguage) {
+      Object.assign(result, performSearch(searchLanguage));
+    });
+  } else {
+    result = performSearch();
+  }
 
   return result;
 };
@@ -182,7 +210,13 @@ var toggleDividerVisibility = function toggleDividerVisibility(add) {
 };
 
 var search = function search(value) {
-  if (value.length === 0) {
+  if ($('#results').length !== 0) {
+    removePreviousResults();
+  }
+
+  toggleContentOpacity(true);
+
+  if (value.length === 0 && $('#filter-language').val() === null && $('#filter-type').val() === null) {
     $('#results').empty();
     toggleDividerVisibility();
     toggleContentOpacity();
@@ -205,8 +239,6 @@ var addFilterEventListeners = function addFilterEventListeners() {
   var objs = ['#filter-type', '#filter-language'];
 
   // https://stackoverflow.com/questions/33934893/materializecss-multiple-select-value-stays-in-array-after-unselecting
-  $;
-
   $.each(objs, function (i, el) {
     $(el).change(function () {
       var _ref4 = [[], $(this)],
@@ -214,9 +246,9 @@ var addFilterEventListeners = function addFilterEventListeners() {
           select = _ref4[1];
 
       var ul = select.prev();
-      ul.children('li').toArray().forEach(function (li, i) {
+      ul.children('li').toArray().forEach(function (li, k) {
         if ($(li).hasClass('active')) {
-          newValuesArr.push(select.children('option').toArray()[i].value);
+          newValuesArr.push(select.children('option').toArray()[k].value);
         }
       });
       select.val(newValuesArr);
@@ -227,12 +259,6 @@ var addFilterEventListeners = function addFilterEventListeners() {
 };
 
 $('#search')[0].addEventListener('input', function searchHandler() {
-  if ($('#results').length !== 0) {
-    removePreviousResults();
-  }
-
-  toggleContentOpacity(true);
-
   search($(this).val().toLowerCase());
 });
 
