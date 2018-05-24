@@ -161,13 +161,6 @@ main {
   flex-flow: column nowrap;
 }
 
-main > .container,
-main > .container > .section {
-  display: flex;
-  flex-flow: column nowrap;
-  flex: 1;
-}
-
 [type='checkbox'].no-label + label {
   padding-left: 10px;
 }
@@ -380,5 +373,17 @@ main > .container > .section {
 @media (max-width: 366px) {
   .collection-item a:first-of-type {
     max-width: 235px;
+  }
+}
+
+@media (min-width: 601px) {
+  .row .col.offset-m0 {
+    margin-left: 0 !important;
+  }
+}
+
+@media (max-width: 600px) {
+  main div:nth-of-type(2) div:nth-of-type(2) {
+    margin-top: 1rem;
   }
 }
